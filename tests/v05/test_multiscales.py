@@ -210,11 +210,11 @@ def test_transform_invalid_ndims(
     "transforms",
     [
         (
-            VectorScale.build((1, 1, 1)),
-            VectorTranslation.build((1, 1, 1)),
-            VectorTranslation.build((1, 1, 1)),
+            VectorScale.model_validate((1, 1, 1)),
+            VectorTranslation.model_validate((1, 1, 1)),
+            VectorTranslation.model_validate((1, 1, 1)),
         ),
-        (VectorScale.build((1, 1, 1)),) * 5,
+        (VectorScale.model_validate((1, 1, 1)),) * 5,
     ],
 )
 def test_transform_invalid_length(
@@ -233,10 +233,10 @@ def test_transform_invalid_length(
 @pytest.mark.parametrize(
     "transforms",
     [
-        (VectorTranslation.build((1, 1, 1)),) * 2,
+        (VectorTranslation.model_validate((1, 1, 1)),) * 2,
         (
-            VectorTranslation.build((1, 1, 1)),
-            VectorScale.build((1, 1, 1)),
+            VectorTranslation.model_validate((1, 1, 1)),
+            VectorScale.model_validate((1, 1, 1)),
         ),
     ],
 )
@@ -258,8 +258,8 @@ def test_transform_invalid_first_element(
     "transforms",
     (
         (
-            VectorScale.build((1, 1, 1)),
-            VectorScale.build((1, 1, 1)),
+            VectorScale.model_validate((1, 1, 1)),
+            VectorScale.model_validate((1, 1, 1)),
         ),
     ),
 )

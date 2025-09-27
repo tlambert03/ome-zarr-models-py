@@ -4,10 +4,12 @@ from ome_zarr_models.common.coordinate_transformations import (
     PathTranslation,
     ScaleTransform,
     TranslationTransform,
-    VectorScale,
+    # VectorScale,
     VectorTransform,
-    VectorTranslation,
+    # VectorTranslation,
 )
+from yaozarrs.v05 import ScaleTransformation as VectorScale
+from yaozarrs.v05 import TranslationTransformation as VectorTranslation
 
 __all__ = [
     "Identity",

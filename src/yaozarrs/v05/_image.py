@@ -1,8 +1,9 @@
-from typing import Annotated, Literal, TypeAlias
+from collections.abc import Sequence
+from typing import Annotated, Any, Literal, Self, TypeAlias
 
+import numpy as np
 from annotated_types import Len, MinLen
 from pydantic import AfterValidator, Field, WrapValidator, model_validator
-from typing_extensions import Self
 
 from yaozarrs._base import _BaseModel
 from yaozarrs._units import SpaceUnits, TimeUnits
@@ -17,6 +18,15 @@ AxisType: TypeAlias = Literal["space", "time", "channel"]
 
 class _AxisBase(_BaseModel):
     name: str = Field(description="The name of the axis.")
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, _AxisBase):
+            return NotImplemented
+        return (
+            self.name == value.name
+            and getattr(self, "type", "None") == getattr(value, "type", "None2")
+            and getattr(self, "unit", "None") == getattr(value, "unit", "None2")
+        )
 
 
 class SpaceAxis(_AxisBase):
@@ -34,17 +44,17 @@ class ChannelAxis(_AxisBase):
     unit: str | None = None  # SHOULD
 
 
-class CustomAxis(_AxisBase):
+class Axis(_AxisBase):
     type: str | None = None  # SHOULD
     unit: str | None = None  # SHOULD
 
 
 # this union allows us to restrict units based on type.
 # Use CustomAxis for any type/unit.
-Axis: TypeAlias = SpaceAxis | TimeAxis | ChannelAxis | CustomAxis
+AxisTypes: TypeAlias = SpaceAxis | TimeAxis | ChannelAxis | Axis
 
 
-def _validate_axes_list(axes: list[Axis]) -> list[Axis]:
+def _validate_axes_list(axes: list[AxisTypes]) -> list[AxisTypes]:
     """Validate a list of Axis for `Multiscale.axes`."""
     # names MUST be unique within the list.
     names = [ax.name for ax in axes]
@@ -76,7 +86,7 @@ def _validate_axes_list(axes: list[Axis]) -> list[Axis]:
 
 
 AxesList: TypeAlias = Annotated[
-    UniqueList[Axis],
+    UniqueList[AxisTypes],
     Len(min_length=2, max_length=5),
     # hack to get around ordering of multiple after validators
     WrapValidator(lambda v, h: _validate_axes_list(h(v))),
@@ -95,6 +105,13 @@ class ScaleTransformation(_BaseModel):
     def ndim(self) -> int:
         return len(self.scale)
 
+    @model_validator(mode="before")
+    @classmethod
+    def _cast_values(cls, val: Any) -> Any:
+        if isinstance(val, (Sequence, np.ndarray)) and not isinstance(val, str):
+            return {"scale": list(val)}
+        return val
+
 
 class TranslationTransformation(_BaseModel):
     type: Literal["translation"] = "translation"
@@ -103,6 +120,13 @@ class TranslationTransformation(_BaseModel):
     @property
     def ndim(self) -> int:
         return len(self.translation)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _cast_values(cls, val: Any) -> Any:
+        if isinstance(val, (Sequence, np.ndarray)) and not isinstance(val, str):
+            return {"translation": list(val)}
+        return val
 
 
 CoordinateTransformation = ScaleTransformation | TranslationTransformation

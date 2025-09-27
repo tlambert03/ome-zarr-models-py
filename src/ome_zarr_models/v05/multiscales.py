@@ -1,9 +1,4 @@
-from ome_zarr_models.common.multiscales import Dataset, MultiscaleBase
+from yaozarrs.v05 import Dataset, Multiscale
 
 __all__ = ["Dataset", "Multiscale"]
 
-
-class Multiscale(MultiscaleBase):
-    """
-    An element of multiscales metadata.
-    """

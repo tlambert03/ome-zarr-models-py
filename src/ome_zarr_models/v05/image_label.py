@@ -1,30 +1,29 @@
-from typing import Self
+from typing import ClassVar, Self
 
 # Import needed for pydantic type resolution
 import pydantic_zarr  # noqa: F401
 import zarr
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
-from ome_zarr_models.v05.base import BaseGroupv05, BaseOMEAttrs
+from ome_zarr_models.v05.base import BaseGroupv05
 from ome_zarr_models.v05.image import Image
-from ome_zarr_models.v05.image_label_types import Label
-from ome_zarr_models.v05.multiscales import Multiscale
+from yaozarrs.v05 import Image as ImageAttrs
+from yaozarrs.v05 import ImageLabel as Label
 
 __all__ = ["ImageLabel", "ImageLabelAttrs"]
 
 
-class ImageLabelAttrs(BaseOMEAttrs):
+class ImageLabelAttrs(ImageAttrs):
     """
     Attributes for an image label object.
     """
 
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_by_name=True)
+
     image_label: Label | None = Field(alias="image-label", default=None)
-    multiscales: list[Multiscale]
 
 
-class ImageLabel(
-    BaseGroupv05[ImageLabelAttrs],
-):
+class ImageLabel(BaseGroupv05[ImageLabelAttrs]):
     """
     An OME-Zarr image label dataset.
     """

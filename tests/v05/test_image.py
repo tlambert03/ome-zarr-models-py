@@ -34,7 +34,7 @@ def test_image(store: Store) -> None:
     )
     ome_group = Image.from_zarr(zarr_group)
 
-    assert ome_group.attributes.ome == ImageAttrs(
+    img_attrs = ImageAttrs(
         multiscales=[
             Multiscale(
                 axes=[
@@ -44,29 +44,29 @@ def test_image(store: Store) -> None:
                     Axis(name="y", type="space", unit="micrometer"),
                     Axis(name="x", type="space", unit="micrometer"),
                 ],
-                datasets=(
+                datasets=[
                     Dataset(
                         path="0",
-                        coordinateTransformations=(
+                        coordinateTransformations=[
                             VectorScale(type="scale", scale=[1.0, 1.0, 0.5, 0.5, 0.5]),
-                        ),
+                        ],
                     ),
                     Dataset(
                         path="1",
-                        coordinateTransformations=(
+                        coordinateTransformations=[
                             VectorScale(type="scale", scale=[1.0, 1.0, 1.0, 1.0, 1.0]),
-                        ),
+                        ],
                     ),
                     Dataset(
                         path="2",
-                        coordinateTransformations=(
+                        coordinateTransformations=[
                             VectorScale(type="scale", scale=[1.0, 1.0, 2.0, 2.0, 2.0]),
-                        ),
+                        ],
                     ),
-                ),
-                coordinateTransformations=(
+                ],
+                coordinateTransformations=[
                     VectorScale(type="scale", scale=[0.1, 1.0, 1.0, 1.0, 1.0]),
-                ),
+                ],
                 metadata={
                     "description": "the fields in metadata depend on the downscaling "
                     "implementation. Here, the parameters passed to the "
@@ -82,6 +82,8 @@ def test_image(store: Store) -> None:
         ],
         version="0.5",
     )
+
+    assert ome_group.attributes.ome == img_attrs
 
 
 def test_image_no_dim_names(store: Store) -> None:

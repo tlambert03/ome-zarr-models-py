@@ -5,29 +5,18 @@ from typing import Any, Self
 import pydantic_zarr  # noqa: F401
 import zarr
 import zarr.errors
-from pydantic import Field, JsonValue, model_validator
+from pydantic import JsonValue, model_validator
 from pydantic_zarr.v3 import AnyArraySpec, AnyGroupSpec, GroupSpec
 
 from ome_zarr_models.common.coordinate_transformations import _build_transforms
 from ome_zarr_models.common.validation import check_array_path
 from ome_zarr_models.v05.axes import Axis
-from ome_zarr_models.v05.base import BaseGroupv05, BaseOMEAttrs, BaseZarrAttrs
+from ome_zarr_models.v05.base import BaseGroupv05, BaseZarrAttrs
 from ome_zarr_models.v05.labels import Labels
 from ome_zarr_models.v05.multiscales import Dataset, Multiscale
+from yaozarrs.v05 import Image as ImageAttrs
 
 __all__ = ["Image", "ImageAttrs"]
-
-
-class ImageAttrs(BaseOMEAttrs):
-    """
-    Metadata for OME-Zarr image groups.
-    """
-
-    multiscales: list[Multiscale] = Field(
-        ...,
-        description="The multiscale datasets for this image",
-        min_length=1,
-    )
 
 
 class Image(BaseGroupv05[ImageAttrs]):

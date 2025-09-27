@@ -2,28 +2,14 @@
 For reference, see the [plate section of the OME-Zarr specification](https://ngff.openmicroscopy.org/0.5/index.html#plate-md).
 """
 
-from pydantic import Field
-
-from ome_zarr_models.common.plate import (
-    Acquisition,
-    Column,
-    PlateBase,
-    Row,
-    WellInPlate,
-)
+from yaozarrs.v05 import Acquisition, Column, Row
+from yaozarrs.v05 import PlateDef as Plate
+from yaozarrs.v05 import PlateWell as WellInPlate
 
 __all__ = [
     "Acquisition",
     "Column",
-    "PlateBase",
+    "Plate",
     "Row",
     "WellInPlate",
 ]
-
-
-class Plate(PlateBase):
-    """
-    A single plate.
-    """
-
-    version: str = Field(description="Version of the plate specification")

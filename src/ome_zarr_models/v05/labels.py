@@ -121,6 +121,7 @@ class Labels(
             try:
                 image_model = ImageLabel.from_zarr(image_group).to_flat()
             except Exception as err:
+                breakpoint()
                 msg = (
                     f"Error validating the label path '{label_path}' "
                     "as a OME-Zarr multiscales group."

@@ -29,12 +29,12 @@ def test_image_label(store: Store) -> None:
         dimension_names=["t", "c", "z", "y", "x"],
     )
     ome_group = ImageLabel.from_zarr(zarr_group)
-    assert ome_group.attributes.ome == ImageLabelAttrs(
+    img_label_attrs = ImageLabelAttrs(
         image_label=Label(
-            colors=(
+            colors=[
                 Color(label_value=0, rgba=(0, 0, 128, 128)),
                 Color(label_value=1, rgba=(0, 128, 0, 128)),
-            ),
+            ],
             properties=[
                 {
                     "label_value": 0,
@@ -100,3 +100,5 @@ def test_image_label(store: Store) -> None:
         ],
         version="0.5",
     )
+
+    assert ome_group.attributes.ome == img_label_attrs

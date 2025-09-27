@@ -12,8 +12,9 @@ from yaozarrs.v05._bf2raw import Bf2Raw
 from yaozarrs.v05._ome import OME
 
 from ._image import (
+    AxesList,
+    Axis,
     ChannelAxis,
-    CustomAxis,
     Dataset,
     Image,
     Multiscale,
@@ -38,9 +39,10 @@ from ._well import FieldOfView, Well, WellDef
 
 __all__ = [
     "Acquisition",
+    "AxesList",
+    "Axis",
     "ChannelAxis",
     "Column",
-    "CustomAxis",
     "Dataset",
     "FieldOfView",
     "Image",

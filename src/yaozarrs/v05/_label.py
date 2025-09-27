@@ -1,7 +1,7 @@
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 
 from annotated_types import Interval, Len, MinLen
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from yaozarrs._base import _BaseModel
 from yaozarrs._utils import UniqueList
@@ -10,15 +10,16 @@ from yaozarrs._utils import UniqueList
 # Color model
 # ------------------------------------------------------------------------------
 
-Int8bit = Annotated[int, Interval(ge=0, le=255)]
+Uint8 = Annotated[int, Interval(ge=0, le=255)]
 
 
 class LabelColor(_BaseModel):
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_by_name=True)
     label_value: float = Field(
         description="The value of the label",
         alias="label-value",
     )
-    rgba: Annotated[list[Int8bit], Len(min_length=4, max_length=4)] | None = Field(
+    rgba: Annotated[list[Uint8], Len(min_length=4, max_length=4)] | None = Field(
         default=None,
         description=(
             "The RGBA color stored as an array of four integers between 0 and 255"
@@ -88,6 +89,8 @@ class LabelsGroup(_BaseModel):
 
 class Label(_BaseModel):
     """Model for individual label images with multiscales + image-label metadata."""
+
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_by_name=True)
 
     version: Literal["0.5"] = "0.5"
     image_label: ImageLabel = Field(alias="image-label")
